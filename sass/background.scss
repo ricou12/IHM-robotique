@@ -1,0 +1,21 @@
+/* ARRIERE PLAN */
+.background {
+    position: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+} 
+
+.bgImage {
+    z-index: -500;
+    background-image: url('./../images/robotique.jpg');
+    filter: blur(10px);
+}
+
+.bgColor--black-transparency {
+    z-index: -400;
+    background-color: rgba(0, 0, 0, 0.5);
+}

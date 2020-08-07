@@ -1,0 +1,20 @@
+{
+  "name": "serveurnode",
+  "version": "1.0.0",
+  "description": "serveur node pour communication avec arduino via le port serie",
+  "main": "server.js",
+  "scripts": {
+    "sass": "node-sass sass/main.scss public_html/assets/css/main.css --watch",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-sass": "^4.14.1",
+    "serialport": "^9.0.0",
+    "socket.io": "^2.3.0",
+    "twig": "^1.15.1"
+  }
+}

@@ -1,0 +1,38 @@
+
+.icon{
+    border:1px dotted #bab5b5;
+    cursor: pointer;
+    max-width: 102px;
+    max-height:102px;
+    margin: 7px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 0, 0.3);
+    -webkit-box-shadow: 0px 10px 13px -7px rgb(0, 255, 191);
+    box-shadow: 0px 10px 13px -5px rgb(0, 255, 191);
+}
+
+.icon:hover{
+    background-color: rgba(255, 255, 0, 0.6);
+}
+
+.icon:active{
+    // background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0px 5px 7px -7px rgb(0, 255, 191);
+    box-shadow: 0px 6px 8px -7px rgb(0, 255, 191);
+}
+
+.txtShadow--white {
+    text-shadow: 1px 2px 2px rgb(255, 255, 255);
+}
+
+.terminal{
+    overflow: scroll;
+    padding: 10px;
+    height:100px;
+    color:lime;
+    background-color: black;
+    border-radius: 5px;
+    border: 1px solid lime;
+    line-height: 1.5em;
+    font-size: 1.2em;
+}
