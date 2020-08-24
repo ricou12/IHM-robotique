@@ -108,37 +108,8 @@
                     <div
                         class="moteurs-vitesse rounded border border-dark d-flex flex-column align-items-center justify-content-around">
                         <div class="font-weight-bold mb-2">Vitesse</div>
-                        <div class="slider-wrapper p-2">
-                            <input type="range" class="slider-moteurs" min="105" max="255" step="10" value="175"
-                                list="tickmarks">
-                            <datalist id="tickmarks">
-                                <option value="5" label="0%">
-                                <option value="15">
-                                <option value="25">
-                                <option value="35">
-                                <option value="45">
-                                <option value="55">
-                                <option value="65">
-                                <option value="75">
-                                <option value="85">
-                                <option value="95">
-                                <option value="105">
-                                <option value="115">
-                                <option value="125" label="50%">
-                                <option value="135">
-                                <option value="145">
-                                <option value="155">
-                                <option value="165">
-                                <option value="175">
-                                <option value="185">
-                                <option value="195">
-                                <option value="205">
-                                <option value="215">
-                                <option value="225">
-                                <option value="235">
-                                <option value="245">
-                                <option value="255" label="100%">
-                            </datalist>
+                        <div class="slider-wrapper slider p-2">
+                            <input type="range" class="slider-moteurs" min="105" max="255" step="10" value="175">
                         </div>
                     </div>
                 </div>
@@ -183,17 +154,10 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-
-            </div>
-        </div>
-    </div>
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/controleCommandes.js"></script>
     <script src="/js/keyboard.js"></script>
+    <script src="/js/slider2.js"></script>
 
 
     <script src="/jquery.min.js"></script>
