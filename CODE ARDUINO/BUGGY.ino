@@ -7,7 +7,6 @@
   ::::::::::
   :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 */
-#include <string.h>
 
 // -------- LIBRAIRIE module MCP23017 (Extension d'E / S I2C 16 bits avec interface série) --------
 #include <Adafruit_MCP23017.h>
@@ -95,11 +94,8 @@ byte taille_message = sizeof(MaStructure);
 // -------- STOCKE LA POSITION DES SERVOMOTEURS AU DEMARRAGE --------
 int message = 0;
 int valueX = 80;
-int valueY = 90;
+int valueY = 80;
 int indiceDeplac = 10;
-
-// -------- DEFINIT LE MODE DE CONTROLE MANUELLE OU AUTOMATIQUE POUR control_mode (0 = JOYPAD / 1 = INTERFACE WEB)
-int control_mode = 1;
 
 
 /*
@@ -255,29 +251,73 @@ void setup() {
   :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 */
 void loop() {
- //defined_state_mode();
-
- // ACTIVE LE MODE CONTROLE A DISTANCE VIA INTERENET
-    controle_interface_web();
+   Commande_Radio();
+   controle_interface_web(); 
 }
 
-void defined_state_mode(){
-  if(joystick.bouton_Haut == 1){
-    control_mode = 0;
-  }
-  if(joystick.bouton_Bas == 1){
-    control_mode = 1;
-  }
-  if(control_mode == 1){
-    // ACTIVE LE MODE CONTROLE A DISTANCE VIA INTERENET
-    controle_interface_web();
-  }else{
-     // ACTIVE LE MODE RADIO EMETTEUR
-     Commande_Radio();
-  }
 
+/*
+  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  ::::::::::
+  ::::::::::    COMMUNICATION PAR RADIO EMETTEUR
+  ::::::::::
+  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+*/
+
+void Commande_Radio(void) {
+  
+   // -------- ON BOUCLE TANT QUE LE MESSAGE N'A PAS ETE RECU --------
+ // while (!Mirf.dataReady()) {
+ // }
+
+  // -------- ON VERFIE SI UN MESSAGE A ETE RECU --------
+  if( Mirf.dataReady() ){
+    // -------- RECUPERE MES DONNEES ENVOYER PAR L'EMETTEUR  --------
+    Mirf.getData((byte *)&joystick); // Réception du paquet
+    
+    // Affiche le message envoyé par la télécommande  dans le moniteur serie
+    //monitoring_joystick(); 
+  
+     /*----------------------------------------
+     *          MOBILITEE DE LA CAMERA
+     ----------------------------------------*/
+    // DEPLACEMENT DE LA CAMERA.
+    Direction_Servomoteur();
+    // ENVOIE LES PARAMETRES AUX SERVO-MOTEURS
+    deplacement_Servo_Cam();
+  
+    /*----------------------------------------
+     *          ENTRAINEMENT DES ROUES
+     ----------------------------------------*/
+    Direction_Moteur();
+    // ENVOIE LES PARAMETRE AU MOTEURS
+    speed_rotate_motor();
+  }
 }
 
+void monitoring_joystick(void){
+  Serial.print("Message reçu: ");
+  Serial.print("moteur axe X : ");
+  Serial.print(joystick.X_G);
+  Serial.print(" , moteur axe Y : ");
+  Serial.print(joystick.Y_G);
+  Serial.print(" , moteur bouton  : ");
+  Serial.print(joystick.SW_G);
+  Serial.print(" ,  Camera axe X : ");
+  Serial.print(joystick.X_D);
+  Serial.print(" , Camera axe Y : ");
+  Serial.print(joystick.Y_D);
+  Serial.print(" , Camera bouton : ");
+  Serial.print(joystick.SW_D);
+  Serial.print(" , Bouton haut: ");
+  Serial.print(joystick.bouton_Haut);
+  Serial.print(" , Bouton bas: ");
+  Serial.print(joystick.bouton_Bas);
+  Serial.print(" , Bouton gauche: ");
+  Serial.print(joystick.bouton_Gauche);
+  Serial.print(" , Bouton droite: ");
+  Serial.println(joystick.bouton_Droite);
+}
 
 /*
   :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -335,30 +375,28 @@ void speed_rotate_motor(void) {
   //   |   (1,-1)      (0,-1)        (-1,-1)
   //  -1
 
-  float variateur_vitesse = 0.5;
+  float variateur_vitesse = 0.75;
   
-  Serial.print("MOTEURS : ");
+  Serial.print(" - MOTEURS : ");
 
   if (Direction.Y == 0) { 
   
     // --------- POINT MORT : couple:(0;0) ---------
     if (Direction.X == 0) {
-      Serial.println("POINT MORT");
+      Serial.print("POINT MORT");
       Actionneur_Moteur(0, 0, 0, 0);
     }
     
     // --------- AVANCER : couple:(0;1) ---------
     if (Direction.X == 1) { 
-      Serial.println("AVANCER");
-     // Actionneur_Moteur(0, joystick.X_G, joystick.X_G, 0);
-      Actionneur_Moteur(0, 255, 255, 0);
+      Serial.print("AVANCER");
+      Actionneur_Moteur(0, joystick.X_G, joystick.X_G, 0);
     }
     
     // --------- RECULER : couple:(0;-1) ---------
     if (Direction.X == -1) {
-      Serial.println("RECULER");
-      //Actionneur_Moteur(-joystick.X_G, 0, 0, -joystick.X_G);
-      Actionneur_Moteur(255, 0, 0, 255);
+      Serial.print("RECULER");
+      Actionneur_Moteur(-joystick.X_G, 0, 0, -joystick.X_G);
     }
  }
 
@@ -366,16 +404,14 @@ void speed_rotate_motor(void) {
 
     // --------- GAUCHE : couple:(1;0) ---------
     if (Direction.X == 0) { // couple: (1;0)
-      Serial.println("GAUCHE");
-      //Actionneur_Moteur(-joystick.Y_G, 0, -joystick.Y_G, 0);
-      Actionneur_Moteur(255, 0, 255, 0);
+      Serial.print("GAUCHE");
+      Actionneur_Moteur(-joystick.Y_G, 0, -joystick.Y_G, 0);
     }
     
     // --------- AVANT GAUCHE : couple:(1;1) ---------
     if (Direction.X == 1) {
       Serial.print("AVANT GAUCHE");
       //  DEFINI LA VITESSE LA PLUS GRANDE
-      /*
       int  vitesse_max;
       if (joystick.X_G > joystick.Y_G) {
         // la plus grande
@@ -385,17 +421,14 @@ void speed_rotate_motor(void) {
         vitesse_max =  joystick.Y_G;
       }
       int vitesse_mini = vitesse_max * (float)variateur_vitesse;
-      monitoring_speedMotors(vitesse_mini,vitesse_max);
       Actionneur_Moteur(0, vitesse_mini, vitesse_max, 0);
-      */
-      Actionneur_Moteur(0, 150, 255, 0);
     }
     
     // --------- ARRIERE GAUCHE : couple:(1;-1) ---------
     if (Direction.X == -1) {
       Serial.print("ARRIERE GAUCHE");
       //  DEFINI LA VITESSE LA PLUS GRANDE
-      /*
+
       int  vitesse_max;
       if (-joystick.X_G > -joystick.Y_G) {
         // la plus grande
@@ -405,10 +438,7 @@ void speed_rotate_motor(void) {
         vitesse_max = -joystick.Y_G;
       }
       int vitesse_mini = vitesse_max * (float)variateur_vitesse;
-      monitoring_speedMotors(vitesse_mini,vitesse_max);
       Actionneur_Moteur(vitesse_mini, 0, 0, vitesse_max);
-      */
-      Actionneur_Moteur(150, 0, 0, 255);
     }
   }
 
@@ -416,16 +446,14 @@ void speed_rotate_motor(void) {
     
     // --------- DROITE : couple:(-1;0) ---------
     if (Direction.X == 0) {
-      Serial.println("DROITE");
-      //Actionneur_Moteur(0, joystick.Y_G, 0, joystick.Y_G);
-      Actionneur_Moteur(0, 255, 0, 255);
+      Serial.print("DROITE");
+      Actionneur_Moteur(0, joystick.Y_G, 0, joystick.Y_G);
     }
     
     // --------- AVANT DROITE : couple:(-1;1) ---------
     if (Direction.X == 1) {
       Serial.print("AVANT DROITE : ");
       //  DEFINI LA VITESSE LA PLUS GRANDE
-      /*
       int  vitesse_max;
       if (joystick.X_G > -joystick.Y_G) {
         // la plus grande
@@ -435,17 +463,13 @@ void speed_rotate_motor(void) {
         vitesse_max = -joystick.Y_G;
       }
       int vitesse_mini = vitesse_max * (float)variateur_vitesse;
-      monitoring_speedMotors(vitesse_mini,vitesse_max);
       Actionneur_Moteur(0, vitesse_max, vitesse_mini, 0);
-      */
-      Actionneur_Moteur(0, 255, 150, 0);
     }
     
     // --------- ARRIERE DROITE : couple:(-1;-1) ---------
     if (Direction.X == -1) {
       Serial.print("ARRIERE DROITE");
       //  DEFINI LA VITESSE LA PLUS GRANDE
-      /*
       int  vitesse_max;
       if (-joystick.X_G > joystick.Y_G) {
         // la plus grande
@@ -455,20 +479,9 @@ void speed_rotate_motor(void) {
         vitesse_max = joystick.Y_G;
       }
       int vitesse_mini = vitesse_max * (float)variateur_vitesse;
-      monitoring_speedMotors(vitesse_mini,vitesse_max);
       Actionneur_Moteur(vitesse_max, 0, 0, vitesse_mini);
-      */
-      Actionneur_Moteur(255, 0, 0, 150);
     }
   }
-}
-
-void monitoring_speedMotors(int vitesse_mini, int vitesse_max) {
-  Serial.print("( ");
-  Serial.print(vitesse_mini);
-  Serial.print(" ; ");
-  Serial.print(vitesse_max);
-  Serial.println(" )");
 }
 
 /**********************************************************************
@@ -490,6 +503,7 @@ void Actionneur_Moteur(int LPWM_Ar_G, int RPWM_Ar_G, int LPWM_Ar_D, int RPWM_Ar_
 }
 
 void monitoringMoteur(int LPWM_Ar_G, int RPWM_Ar_G, int LPWM_Ar_D, int RPWM_Ar_D){
+  Serial.print(" : ");
   Serial.print(LPWM_Ar_G);
   Serial.print(" , ");
   Serial.print(RPWM_Ar_G);
@@ -550,19 +564,19 @@ void deplacement_Servo_Cam(void) {
   if (Direction_Servo.Y == 0) {
     if (Direction_Servo.X == 0) { // couple: (0;0)
       // POINT MORT
-      Serial.println("CENTRE");
+      Serial.print("CENTRE");
       Servomoteur_cam1.write(80);
       Servomoteur_cam2.write(90);
     }
     if (Direction_Servo.X == 1) { // couple: (0;1)
       // REGARDER EN HAUT
-      Serial.println("HAUT ");
+      Serial.print("HAUT ");
       int value = map( joystick.X_D, 0, 255, 90, 0);
       Servomoteur_cam1.write(value);
     }
     if (Direction_Servo.X == -1) { // couple: (0;-1)
       // REGARDER EN BAS
-      Serial.println("BAS");
+      Serial.print("BAS");
       int value = map( -joystick.X_D, 0, 255, 90, 180);
       Servomoteur_cam1.write(value);
     }
@@ -570,13 +584,13 @@ void deplacement_Servo_Cam(void) {
   if (Direction_Servo.Y == 1) {
     if (Direction_Servo.X == 0) { // couple: (1;0)
       // REGARDER A GAUCHE
-      Serial.println("GAUCHE");
+      Serial.print("GAUCHE");
       int value = map( -joystick.Y_D, 0, 255, 90, 180);
       Servomoteur_cam2.write(value);
     }
     if (Direction_Servo.X == 1) { // couple: (1;1)
       //REGARDER EN HAUT A GAUCHE
-      Serial.println("HAUT A GAUCHE");
+      Serial.print("HAUT A GAUCHE");
       int value = map( joystick.X_D, 0, 255, 90, 0);
       Servomoteur_cam1.write(value);
       int value1 = map( -joystick.Y_D, 0, 255, 90, 180);
@@ -584,7 +598,7 @@ void deplacement_Servo_Cam(void) {
     }
     if (Direction_Servo.X == -1) { // couple: (1;-1)
       // REGARDER EN BAS A GAUCHE
-      Serial.println("BAS A GAUCHE");
+      Serial.print("BAS A GAUCHE");
       int value = map( -joystick.X_D, 0, 255, 90, 180);
       Servomoteur_cam1.write(value);
       int value1 = map( -joystick.Y_D, 0, 255, 90, 180);
@@ -594,13 +608,13 @@ void deplacement_Servo_Cam(void) {
   if (Direction_Servo.Y == -1) {
     if (Direction_Servo.X == 0) { // couple: (-1;0)
       // REGARDER A DROITE
-      Serial.println("DROITE");
+      Serial.print("DROITE");
       int value = map( joystick.Y_D, 0, 255, 90, 0);
       Servomoteur_cam2.write(value);
     }
     if (Direction_Servo.X == 1) { // couple: (-1;1)
       // REGARDER EN HAUT A DROITE
-      Serial.println("HAUT A DROITE");
+      Serial.print("HAUT A DROITE");
       int value = map( joystick.X_D, 0, 255, 90, 0);
       Servomoteur_cam1.write(value);
       int value1 = map( joystick.Y_D, 0, 255, 90, 0);
@@ -608,77 +622,13 @@ void deplacement_Servo_Cam(void) {
     }
     if (Direction_Servo.X == -1) { // couple: (-1;-1)
       // REGARDER EN BAS A DROITE
-      Serial.println("BAS A DROITE");
+      Serial.print("BAS A DROITE");
       int value = map( -joystick.X_D, 0, 255, 90, 180);
       Servomoteur_cam1.write(value);
       int value1 = map( joystick.Y_D, 0, 255, 90, 0);
       Servomoteur_cam2.write(value1);
     }
   }
-}
-
-
-/*
-  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-  ::::::::::
-  ::::::::::    COMMUNICATION PAR RADIO EMETTEUR
-  ::::::::::
-  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-*/
-
-void Commande_Radio(void) {
-  
-   // -------- ON BOUCLE TANT QUE LE MESSAGE N'A PAS ETE RECU --------
-  while (!Mirf.dataReady()) {
-    //Serial.println("En attente de reception de données");
-    defined_state_mode();
-  }
-
-  // -------- RECUPERE MES DONNEES ENVOYER PAR L'EMETTEUR  --------
-  Mirf.getData((byte *)&joystick); // Réception du paquet
-  
-  // Affiche le message dans le moniteur serie
-  monitoring_joystick(); 
-
-   /*----------------------------------------
-   *          MOBILITEE DE LA CAMERA
-   ----------------------------------------*/
-  // DEPLACEMENT DE LA CAMERA.
-  Direction_Servomoteur();
-  // ENVOIE LES PARAMETRES AUX SERVO-MOTEURS
-  deplacement_Servo_Cam();
-
-  /*----------------------------------------
-   *          ENTRAINEMENT DES ROUES
-   ----------------------------------------*/
-  Direction_Moteur();
-  // ENVOIE LES PARAMETRE AU MOTEURS
-  speed_rotate_motor();
-
-}
-
-void monitoring_joystick(void){
-  Serial.print("Message reçu: ");
-  Serial.print("moteur axe X : ");
-  Serial.print(joystick.X_G);
-  Serial.print(" , moteur axe Y : ");
-  Serial.print(joystick.Y_G);
-  Serial.print(" , moteur bouton  : ");
-  Serial.print(joystick.SW_G);
-  Serial.print(" ,  Camera axe X : ");
-  Serial.print(joystick.X_D);
-  Serial.print(" , Camera axe Y : ");
-  Serial.print(joystick.Y_D);
-  Serial.print(" , Camera bouton : ");
-  Serial.print(joystick.SW_D);
-  Serial.print(" , Bouton haut: ");
-  Serial.print(joystick.bouton_Haut);
-  Serial.print(" , Bouton bas: ");
-  Serial.print(joystick.bouton_Bas);
-  Serial.print(" , Bouton gauche: ");
-  Serial.print(joystick.bouton_Gauche);
-  Serial.print(" , Bouton droite: ");
-  Serial.println(joystick.bouton_Droite);
 }
 
 
