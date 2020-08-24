@@ -1,3 +1,4 @@
+{# TODO integre la visio dans la page #}
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -5,113 +6,248 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
-    <link rel="stylesheet" type="text/css" href= '/css/main.css' >
+    <link rel="stylesheet" type="text/css" href='/css/main.css'>
 </head>
 
 
-<body>
+<body class="colorDark">
     <!-- Background fixed full size -->
     <div class="background bgImage"></div>
     <div class="background bgColor--black-transparency"></div>
 
-    <div class="container">
+
+    <div class="container-fluid">
+        <!-- Titre +console -->
         <div class="row">
-            <div class="col-12 my-5 text-center">
-                <h1 class="txtShadow--white">Télécommande</h1>
+            <div class="col-12 d-flex flex-nowrap p-2 align-items-center">
+                <div class="text-center flex-grow-1">
+                    <h1 class="title">IHM - Télécommande</h1>
+                </div>
+                <div class="mr-1">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-light" data-toggle="modal"
+                        data-target="#exampleModalCenter">
+                        Console
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content colorDark text-white">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Exécuter une action </h5>
+                                    <button type="button" class="close text-white" data-dismiss="modal"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="/images/communication.png" alt="Communication" width="100%">
+                                    <p class="font-weight-bold text-primary">Liste de commandes</p>
+                                    <p><span class="font-weight-bold text-success">Caméra</span> : CamUp, CamDown,
+                                        CamLeft, CamCenter, CamRight, CamScanX, CamScanY.</p>
+                                    <p><span class="font-weight-bold text-success">Déplacement du véhicule</span> :
+                                        MotorsStop, MotorsForward, MotorsBackward, MotorsLeft,
+                                        MotorsFrontLeft, MotorsBackLeft, MotorsRight, MotorsFrontRight, MotorsBackRight
+                                    </p>
+                                    <label for="myAction">Séléctionner l'action suivante : </label>
+                                    <select name="action" id="myAction">
+                                        <option value="">--sélectionner une commande--</option>
+                                        <option value="CamUp">CamUp : regarder en haut</option>
+                                        <option value="CamDown">CamDown : regarder en bas</option>
+                                        <option value="CamLeft">CamLeft : regarder à gauche</option>
+                                        <option value="CamCenter">CamCenter : regarder en face</option>
+                                        <option value="CamRight">CamRight : regarder en droite</option>
+                                        <option value="CamScanX">CamScanX : regarder de droite à gauche</option>
+                                        <option value="CamScanY">CamScanY : regarder de haut en bas</option>
+                                        <option value="MotorsStop">MotorsStop : arrêter</option>
+                                        <option value="MotorsForward">MotorsForward : avancer</option>
+                                        <option value="MotorsBackward">MotorsBackward : reculer</option>
+                                        <option value="MotorsLeft">MotorsLeft : déplacer vers la gauche</option>
+                                        <option value="MotorsFrontLeft">MotorsFrontLeft : déplacer vers l'avant gauche
+                                        </option>
+                                        <option value="MotorsBackLeft">MotorsBackLeft : déplacer vers l'arrière gauche
+                                        </option>
+                                        <option value="MotorsRight">MotorsRight : déplacer vers la droite</option>
+                                        <option value="MotorsFrontRight">MotorsFrontRight : déplacer vers l'avant droite
+                                        </option>
+                                        <option value="MotorsBackRight">MotorsBackRight : reculer à droite</option>
+                                    </select>
+                                    <button type="button" class="btn btn-outline-primary mt-2 mt-sm-0"
+                                        id="execAction">Exécuter</button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-6">
-                <h3 class="text-white">Données envoyées par le server</h3>
-                <div class="terminal" id ="dataServer"></div>
-            </div>
-            <div class="col-6">
-                <h3 class="text-white">Données échangées par le port serie</h3>
-                <div class="terminal" id ="dataSerialPort"></div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-12 col-md-6 mt-4 moteurs">
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="txtShadow--white text-center">Commandes moteurs</h3>
+        <div class="row no-gutters" id="myConsole">
+            <!-- Terminal -->
+            <div class="col-12 order-1 col-xl-6 order-xl-2 d-flex flex-column pr-1 pr-md-0">
+                <div class="infoConsole infoConsole__haut--height">
+                    <div class="infoConsole__titre infoConsole__titre__server--bRadius">
+                        Server
                     </div>
+                    <div class="terminal terminal-server" id="dataServer"></div>
+
                 </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <img src="/images/hautGauche.png" alt="" action="moteur_AvGauche" class="icon">
-                        <img src="/images/avancer.png" alt="" action="moteur_Avancer" class="icon">
-                        <img src="/images/hautDroite.png" alt="" action="moteur_AvDroite" class="icon">
-                    </div>
+                <div class="commande-camera">
+                    <iframe id="rpiCam" src="http://10.3.141.1/RpiCam/min.php"></iframe>
                 </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <img src="/images/gauche.png" alt="" action="moteur_Gauche" class="icon">
-                        <img src="/images/centrer.png" alt="" action="moteur_Stop" class="icon">
-                        <img src="/images/droite.png" alt="" action="moteur_Droite" class="icon">
+                <div class="infoConsole infoConsole__bas--height">
+                    <div class="infoConsole__titre infoConsole__titre__serialPort--bRadius">
+                        Port série
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <img src="/images/basGauche.png" alt="" action="moteur_ArGauche" class="icon">
-                        <img src="/images/reculer.png" alt="" action="moteur_Reculer" class="icon">
-                        <img src="/images/basDroite.png" alt="" action="moteur_ArDroite" class="icon">
-                    </div>
+                    <div class="terminal terminal-serialPort" id="dataSerialPort"></div>
                 </div>
             </div>
 
-            <div class="col-12 col-md-6 camera mt-4">
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="txtShadow--white text-center">Commandes caméra</h3>
+            <!-- Commandes moteurs -->
+            <div class="col-6 order-2 col-xl-3 order-xl-1 d-flex flex-column align-items-center mt-2 cacher"
+                id="container__boxMoteur">
+                <div class="boxTitleHaut">
+                    <h5 class="sousTitre text-center">Commandes moteurs</h5>
+                </div>
+                <div class="grid-containerMoteurs">
+                    <div class="moteurs-avt">
+                        <img src="/images/avancer.png" alt="" data-id="moteur_Avancer" class="icon">
+                    </div>
+                    <div class="moteurs-avtgauche">
+                        <img src="/images/hautGauche.png" alt="" data-id="moteur_AvGauche" class="icon">
+                    </div>
+                    <div class="moteurs-avtDroite">
+                        <img src="/images/hautDroite.png" alt="" data-id="moteur_AvDroite" class="icon">
+                    </div>
+                    <div class="moteurs-ct">
+                        <img src="/images/centrer.png" alt="" data-id="moteur_Stop" class="icon">
+                    </div>
+                    <div class="moteurs-ctGauche">
+                        <img src="/images/gauche.png" alt="" data-id="moteur_Gauche" class="icon">
+                    </div>
+                    <div class="moteurs-ctDroite">
+                        <img src="/images/droite.png" alt="" data-id="moteur_Droite" class="icon">
+                    </div>
+                    <div class="moteurs-ar">
+                        <img src="/images/reculer.png" alt="" data-id="moteur_Reculer" class="icon">
+                    </div>
+                    <div class="moteurs-arGauche">
+                        <img src="/images/basGauche.png" alt="" data-id="moteur_ArGauche" class="icon">
+                    </div>
+                    <div class="moteurs-arDroite">
+                        <img src="/images/basDroite.png" alt="" data-id="moteur_ArDroite" class="icon">
+                    </div>
+                    <div class="moteurs-vitesse rounded border border-dark d-flex flex-column align-items-center justify-content-around">
+                        <!-- <div class="font-weight-bold">Vitesse</div> -->
+                        <div class="slider-wrapper p-2">
+                            <input type="range" class="slider-moteurs" min="105" max="255" step="10" value="175" list="tickmarks">
+                            <datalist id="tickmarks">
+                                <option value="5" label="0%">
+                                <option value="15">
+                                <option value="25">
+                                <option value="35">
+                                <option value="45">
+                                <option value="55">
+                                <option value="65">
+                                <option value="75">
+                                <option value="85">
+                                <option value="95">
+                                <option value="105">
+                                <option value="115">
+                                <option value="125" label="50%">
+                                <option value="135">
+                                <option value="145">
+                                <option value="155">
+                                <option value="165">
+                                <option value="175">
+                                <option value="185">
+                                <option value="195">
+                                <option value="205">
+                                <option value="215">
+                                <option value="225">
+                                <option value="235">
+                                <option value="245">
+                                <option value="255" label="100%">
+                            </datalist>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <img src="images/avancer.png" alt="" action="camera_Haut" class="icon">
-                    </div>
-                    <div class="col-12 d-flex justify-content-center">
-                        <img src="/images/gauche.png" alt="" action="camera_Gauche" class="icon">
-                        <img src="/images/centrer.png" alt="" action="camera_Centre" class="icon">
-                        <img src="/images/droite.png" alt="" action="camera_Droite" class="icon">
-                    </div>
-                    <div class="col-12 d-flex justify-content-center">
-                        <img src="/images/reculer.png" alt="" action="camera_Bas" class="icon">
-                    </div>
+                <div class="boxTitleBas">
+                    <h5 class="sousTitre text-center">Commandes moteurs</h5>
                 </div>
             </div>
 
-            <div class="col-12 col-md-6 offset-md-6 mt-4">
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="txtShadow--white text-center">Automatisée</h3>
+            <!-- Commandes caméra -->
+            <div class="col-6 order-3 col-xl-3 order-xl-3 d-flex flex-column align-items-center mt-2 cacher"
+                id="container__boxCamera">
+                <div class="boxTitleHaut">
+                    <h5 class="sousTitre text-center">Caméra</h5>
+                </div>
+                <div class="grid-containerCamera">
+                    <div class="camera-avt">
+                        <img src="images/avancer.png" alt="" data-id="camera_Haut" class="icon">
+                    </div>
+                    <div class="camera-centre">
+                        <img src="/images/centrer.png" alt="" data-id="camera_Centre" class="icon">
+                    </div>
+                    <div class="camera-gauche">
+                        <img src="/images/gauche.png" alt="" data-id="camera_Gauche" class="icon">
+                    </div>
+                    <div class="camera-droite">
+                        <img src="/images/droite.png" alt="" data-id="camera_Droite" class="icon">
+                    </div>
+                    <div class="camera-arr">
+                        <img src="/images/reculer.png" alt="" data-id="camera_Bas" class="icon">
+                    </div>
+                    <div class="camera-scanGauche">
+                        <img src="/images/scanX.png" alt="" data-id="camera_Scan-X" class="icon">
+                    </div>
+                    <div class="camera-scanDroite">
+                        <img src="/images/scanY.png" alt="" data-id="camera_Scan-Y" class="icon">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <img src="/images/scanX.png" alt="" action="camera_Scan-X" class="icon">
-                        <img src="/images/scanY.png" alt="" action="camera_Scan-Y" class="icon">
-                    </div>
+                <div class="boxTitleBas">
+                    <h5 class="sousTitre text-center">Commandes caméra</h5>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    {# // <script src="/js/socket-io.js"></script> #}
-    <script src="/js/commande.js"></script>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                
+            </div>
+        </div>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/controleCommandes.js"></script>
+    <script src="/js/keyboard.js"></script>
+
+
+    <script src="/jquery.min.js"></script>
+    <!-- <script src="/popper.js"></script> -->
+    <script src="/bootstrap.min.js"></script>
+
+    <!-- CDN -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-    </script>
+    </script> -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
-    </script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity
+        ="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+    </script> -->
+
 </body>
 
 </html>

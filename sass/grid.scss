@@ -1,0 +1,106 @@
+// ACTIONNNER LES MOTEURS
+
+@mixin border-Grid {
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: #9a9a9a;
+}
+
+
+.grid-containerMoteurs {
+  background: rgba(45, 48, 60,0.5);
+  @include border-Grid;
+  padding: 5%;
+  width: 100%;
+  max-width: 200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 10px 10px;
+  grid-template-areas: "avtgauche avt avtDroite" "ctGauche ct ctDroite" "arGauche ar arDroite" "vitesseMt vitesseMt vitesseMt";
+}
+
+.moteurs-avt {
+  grid-area: avt;
+}
+
+.moteurs-avtgauche {
+  grid-area: avtgauche;
+}
+
+.moteurs-avtDroite {
+  grid-area: avtDroite;
+}
+
+.moteurs-ct {
+  grid-area: ct;
+}
+
+.moteurs-ctGauche {
+  grid-area: ctGauche;
+}
+
+.moteurs-ctDroite {
+  grid-area: ctDroite;
+}
+
+.moteurs-ar {
+  grid-area: ar;
+}
+
+.moteurs-arGauche {
+  grid-area: arGauche;
+}
+
+.moteurs-arDroite {
+  grid-area: arDroite;
+}
+
+.moteurs-vitesse{
+  grid-area: vitesseMt;
+  font-size: 0.7em;
+  color: lime;
+}
+
+
+// DEPLACEMENT DE LA CAMERA
+.grid-containerCamera {
+  background: rgba(45, 48, 60,0.5);
+  @include border-Grid;
+  padding: 5%;
+  width: 100%;
+  max-width: 200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 10px 10px;
+  grid-template-areas: ". haut ." "gauche centre droite" ". bas ."  "scanGauche . scanDroite";
+}
+
+.camera-avt {
+  grid-area: haut;
+}
+
+.camera-centre {
+  grid-area: centre;
+}
+
+.camera-gauche {
+  grid-area: gauche;
+}
+
+.camera-droite {
+  grid-area: droite;
+}
+
+.camera-arr {
+  grid-area: bas;
+}
+
+.camera-scanGauche {
+  grid-area: scanGauche;
+}
+
+.camera-scanDroite {
+  grid-area: scanDroite;
+}

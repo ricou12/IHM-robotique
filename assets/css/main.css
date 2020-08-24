@@ -7153,6 +7153,48 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6; } }
 
+.started {
+  -webkit-animation: deployed 2s linear;
+  animation: deployed 1s; }
+
+@-webkit-keyframes deployed {
+  from {
+    transform: scale(0.1); }
+  to {
+    transform: scale(1); } }
+
+@keyframes deployed {
+  from {
+    transform: scale(0.1); }
+  to {
+    transform: scale(1); } }
+
+.derouler {
+  -webkit-animation: visibility 1s ease-out;
+  animation: visibility 1s ease-out; }
+
+@-webkit-keyframes visibility {
+  0% {
+    overflow: hidden;
+    transform: scale(0.1) rotate(720deg);
+    border-radius: 50%; }
+  70% {
+    transform: scale(0.6) rotate(0deg);
+    border-radius: 0%; }
+  100% {
+    transform: scale(1); } }
+
+@keyframes visibility {
+  0% {
+    overflow: hidden;
+    transform: scale(0.1) rotate(720deg);
+    border-radius: 100%; }
+  70% {
+    transform: scale(0.6) rotate(0deg);
+    border-radius: 0%; }
+  100% {
+    transform: scale(1); } }
+
 /* ARRIERE PLAN */
 .background {
   position: fixed;
@@ -7166,40 +7208,322 @@ a.text-dark:hover, a.text-dark:focus {
 .bgImage {
   z-index: -500;
   background-image: url("./../images/robotique.jpg");
-  filter: blur(10px); }
+  filter: blur(2px); }
 
 .bgColor--black-transparency {
   z-index: -400;
   background-color: rgba(0, 0, 0, 0.5); }
 
+.cacher {
+  visibility: hidden; }
+
+.colorDark {
+  background-color: #1e1e1e; }
+
+.boxTitleHaut {
+  font-size: 0.8em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 250px;
+  height: 35px;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px 5px 0 0;
+  background-color: rgba(30, 34, 49, 0.7); }
+
+.boxTitleBas {
+  font-size: 0.8em;
+  width: 100%;
+  height: 35px;
+  max-width: 250px;
+  border: 1px solid #9a9a9a;
+  border-radius: 0 0 5px 5px;
+  background-color: rgba(30, 34, 49, 0.7); }
+
+.title {
+  padding: 10px;
+  color: white;
+  font-size: 1.1em;
+  text-shadow: 1px 0 1px #423e3e, -1px 0 1px #423e3e, 0 1px 1px #423e3e, 0 -1px 1px #423e3e; }
+
+.sousTitre {
+  color: #9a9a9a;
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 0 15px 0 15px; }
+
 .icon {
-  border: 1px dotted #bab5b5;
   cursor: pointer;
-  max-width: 102px;
-  max-height: 102px;
-  margin: 7px;
-  border-radius: 10px;
-  background-color: rgba(255, 255, 0, 0.3);
-  -webkit-box-shadow: 0px 10px 13px -7px #00ffbf;
-  box-shadow: 0px 10px 13px -5px #00ffbf; }
+  width: 100%;
+  max-width: 100px;
+  border-radius: 10%;
+  padding: 2px;
+  background-color: #fcfca7;
+  -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0);
+  box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0); }
 
 .icon:hover {
-  background-color: rgba(255, 255, 0, 0.6); }
+  background-color: #fffc5c; }
 
 .icon:active {
-  -webkit-box-shadow: 0px 5px 7px -7px #00ffbf;
-  box-shadow: 0px 6px 8px -7px #00ffbf; }
+  -webkit-box-shadow: 0px 5px 7px -7px #ff8f00;
+  box-shadow: 0px 6px 8px -7px #ff8f00; }
 
-.txtShadow--white {
-  text-shadow: 1px 2px 2px white; }
+.container__moteurs {
+  height: 200px; }
 
-.terminal {
-  overflow: scroll;
-  padding: 10px;
-  height: 100px;
-  color: lime;
+.commande-camera {
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: #9a9a9a; }
+  .commande-camera__controle:hover {
+    opacity: 1; }
+
+#rpiCam {
   background-color: black;
-  border-radius: 5px;
-  border: 1px solid lime;
-  line-height: 1.5em;
-  font-size: 1.2em; }
+  width: 100%;
+  min-height: 300px;
+  height: 30vw; }
+
+.infoConsole {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  font-size: 0.7em;
+  color: #9a9a9a; }
+  .infoConsole__haut--height {
+    height: 40px; }
+  .infoConsole__bas--height {
+    height: 100px; }
+  .infoConsole__titre {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #9a9a9a;
+    padding: 0 10px 0 10px;
+    background-color: #1e2231;
+    font-weight: bold;
+    min-width: 100px; }
+    .infoConsole__titre__server--bRadius {
+      border-radius: 5px 0 0 0; }
+    .infoConsole__titre__serialPort--bRadius {
+      border-radius: 0 0 0 5px; }
+  .infoConsole .terminal {
+    flex-grow: 1;
+    overflow: scroll;
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color: #9a9a9a;
+    color: lime;
+    background-color: #1e1e1e;
+    padding: 0 5px 0 5px;
+    font-size: 0.9em;
+    font-weight: 500; }
+    .infoConsole .terminal-server {
+      border-radius: 0 5px 0 0;
+      height: 100%; }
+    .infoConsole .terminal-serialPort {
+      border-radius: 0 0 5px 0;
+      height: 100%; }
+
+@media screen and (max-width: 755px) {
+  .infoConsole__haut--height {
+    height: 20px; }
+  .infoConsole__bas--height {
+    height: 45px; } }
+
+@media screen and (max-width: 1199px) {
+  #rpiCam {
+    background-color: black;
+    width: 100%;
+    min-height: 50vw;
+    height: auto; } }
+
+.grid-containerMoteurs {
+  background: rgba(45, 48, 60, 0.5);
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: #9a9a9a;
+  padding: 5%;
+  width: 100%;
+  max-width: 200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 10px 10px;
+  grid-template-areas: "avtgauche avt avtDroite" "ctGauche ct ctDroite" "arGauche ar arDroite" "vitesseMt vitesseMt vitesseMt"; }
+
+.moteurs-avt {
+  grid-area: avt; }
+
+.moteurs-avtgauche {
+  grid-area: avtgauche; }
+
+.moteurs-avtDroite {
+  grid-area: avtDroite; }
+
+.moteurs-ct {
+  grid-area: ct; }
+
+.moteurs-ctGauche {
+  grid-area: ctGauche; }
+
+.moteurs-ctDroite {
+  grid-area: ctDroite; }
+
+.moteurs-ar {
+  grid-area: ar; }
+
+.moteurs-arGauche {
+  grid-area: arGauche; }
+
+.moteurs-arDroite {
+  grid-area: arDroite; }
+
+.moteurs-vitesse {
+  grid-area: vitesseMt;
+  font-size: 0.7em;
+  color: lime; }
+
+.grid-containerCamera {
+  background: rgba(45, 48, 60, 0.5);
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: #9a9a9a;
+  padding: 5%;
+  width: 100%;
+  max-width: 200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 10px 10px;
+  grid-template-areas: ". haut ." "gauche centre droite" ". bas ."  "scanGauche . scanDroite"; }
+
+.camera-avt {
+  grid-area: haut; }
+
+.camera-centre {
+  grid-area: centre; }
+
+.camera-gauche {
+  grid-area: gauche; }
+
+.camera-droite {
+  grid-area: droite; }
+
+.camera-arr {
+  grid-area: bas; }
+
+.camera-scanGauche {
+  grid-area: scanGauche; }
+
+.camera-scanDroite {
+  grid-area: scanDroite; }
+
+input[type=range] {
+  -webkit-appearance: none;
+  /* Hides the slider so that custom slider can be made */
+  width: 100%;
+  /* Specific width is required for Firefox. */
+  background: transparent;
+  /* Otherwise white in Chrome */ }
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; }
+
+input[type=range]:focus {
+  outline: none;
+  /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */ }
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  /* Hides the slider so custom styles can be added */
+  background: transparent;
+  border-color: transparent;
+  color: transparent; }
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -14px;
+  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  /* Add cool effects to your sliders! */ }
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer; }
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer; }
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101; }
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #367ebd; }
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101; }
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent; }
+
+input[type=range]::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; }
+
+input[type=range]:focus::-ms-fill-lower {
+  background: #3071a9; }
+
+input[type=range]::-ms-fill-upper {
+  background: #3071a9;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; }
+
+input[type=range]:focus::-ms-fill-upper {
+  background: #367ebd; }

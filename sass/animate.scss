@@ -1,0 +1,57 @@
+.started{
+    -webkit-animation: deployed 2s linear;
+    animation: deployed 1s ;
+}
+@-webkit-keyframes deployed{
+    from{
+        transform: scale(0.1);
+     }
+     to{
+        transform: scale(1);
+     }
+}
+
+@keyframes deployed{
+    from{
+        transform: scale(0.1);
+     }
+     to{
+        transform: scale(1);
+     }
+}
+
+
+.derouler{
+    -webkit-animation: visibility 1s ease-out;
+    animation: visibility 1s ease-out;
+}
+
+@-webkit-keyframes visibility{
+    0%{
+        overflow: hidden;
+        transform: scale(0.1) rotate(720deg); 
+        border-radius: 50%;
+     }
+     70%{
+        transform: scale(0.6)  rotate(0deg);
+        border-radius: 0%; 
+     }
+     100%{
+        transform: scale(1);
+     }
+}
+
+@keyframes visibility{
+    0%{
+        overflow: hidden;
+        transform: scale(0.1) rotate(720deg);
+        border-radius: 100%;
+     }
+     70%{
+        transform: scale(0.6)  rotate(0deg);
+        border-radius: 0%; 
+     }
+     100%{
+        transform: scale(1);
+     }
+}

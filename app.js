@@ -21,18 +21,12 @@ app.set("twig options", {
     strict_variables: false
 });
 
+
 // AJOUTE UN MIDDLEWARE (autorise le chargement de fichiers static)
 app.use(express.static('assets'));
-
-// ------- GESTION DES ROUTES ---------
-// Chargement de la page
-app.get('/', function (req, res) {
-    // return res.send('<h2>Bienvenue !</h2>');
-    res.render('index.html.twig', {
-        title: "Surveillance vidéo"
-    });
-    console.log('page chargée');
-});
+app.use(express.static('node_modules/jquery/dist'));
+app.use(express.static('node_modules/bootstrap/dist/js'));
+// app.use(express.static('node_modules/@popperjs/core/dist/cjs'));
 
 // DESACTIVATION DU PROTOCOLE CORS
 app.use((req, res, next) => {
@@ -44,8 +38,25 @@ app.use((req, res, next) => {
     next();
 });
 
+// ------- GESTION DES ROUTES ---------
+// Chargement de la page
+app.get('/', function (req, res) {
+    res.render('index.html.twig', {
+        title: "Surveillance vidéo"
+    });
+    console.log('Page chargée');
+});
+
+// DEFINIT L'ACTION A REALISER ET ENVOIE DE LA COMMANDE VIA LE PORT SERIE (WRITE)
+app.get('/:action', function (req, res) {
+    message = '';
+    let action = req.params.action || req.param('action');
+    arduinoSerialPort.write(action);
+    io.sockets.emit('messageServer', action);
+});
+
 const myserver = app.listen(port, function () {
-    console.log('Connection avec le server établit : URL pour l\'interface de commande http://localhost:' + port + ' !');
+    console.log('Connection avec le server établit : IP pour l\'interface de commande http://10.3.141.1:' + port + ' !');
 });
 
 
@@ -53,114 +64,48 @@ const myserver = app.listen(port, function () {
                             SOCKET.IO
 ******************************************************************* */
 // Chargement de socket.io
-let io = require('socket.io').listen(myserver);
+let io = require('socket.io')(myserver);
 
 io.sockets.on('connection', function (socket) {
     // Quand un client se connecte, on le note dans la console
     console.log('Un client est connecté !');
 
     // Quand un client se connecte, on envoie un message
-    socket.emit('messageServer', 'Vous êtes bien connecté !');
+    socket.emit('messageServer', 'Vous êtes connecté au serveur !');
 
-    // On écoute les requetes du client 
-    socket.on('commande', function (message) {
-        console.log('message du client : ' + message);
-        switch (message) {
-            case 'camera_Haut':
-                arduinoSerialPort.write("CamUp");
-                message = "Regarde en haut";
-                break;
-    
-            case 'camera_Bas':
-                arduinoSerialPort.write("CamDown");
-                message = "Regarde en bas";
-                break;
-    
-            case 'camera_Gauche':
-                arduinoSerialPort.write("CamLeft");
-                message = "Regarde à gauche";
-                break;
-    
-            case 'camera_Centre':
-                arduinoSerialPort.write("CamCenter");
-                message = "Centrage de la caméra";
-                break;
-    
-            case 'camera_Droite':
-                arduinoSerialPort.write("CamRight");
-                message = "Regarde à droite";
-                break;
-    
-            case 'camera_Scan-X':
-                arduinoSerialPort.write("CamScanX");
-                message = "Regarde de gauche à droite";
-                break;
-    
-            case 'camera_Scan-Y':
-                arduinoSerialPort.write("CamScanY");
-                message = "Regarde de haut en bas";
-                break;
-    
-            case 'moteur_Stop':
-                arduinoSerialPort.write("MotorsStop");
-                message = "Arrêt du véhicule";
-                break;
-    
-            case 'moteur_Avancer':
-                arduinoSerialPort.write("MotorsForward");
-                message = "Déplacement vers l'avant";
-                break;
-    
-            case 'moteur_Reculer':
-                arduinoSerialPort.write("MotorsBackward");
-                message = "Déplacement marche arrière";
-                break;
-    
-            case 'moteur_Gauche':
-                arduinoSerialPort.write("MotorsLeft");
-                message = "Déplacement à gauche";
-                break;
-    
-            case 'moteur_AvGauche':
-                arduinoSerialPort.write("MotorsFrontLeft");
-                message = "Déplacement avant gauche";
-                break;
-    
-            case 'moteur_Droite':
-                arduinoSerialPort.write("MotorsRight");
-                message = "Déplacement à droite";
-                break;
-    
-            case 'moteur_ArGauche':
-                arduinoSerialPort.write("MotorsBackLeft");
-                message = "Déplacement arrière gauche";
-                break;
-    
-            case 'moteur_AvDroite':
-                arduinoSerialPort.write("MotorsFrontRight");
-                message = "Déplacement avant droite";
-                break;
-    
-            case 'moteur_ArDroite':
-                arduinoSerialPort.write("MotorsBackRight");
-                message = "Déplacement arrière droite";
-                break;
-            
-            default:
-                console.log(`Désolé cette action n'est pas reconnue : ${action}.`);
-        }
-        socket.emit('messageServer',message);
+    // On écoute les requetes du client et on envoie la commande à l'arduino
+    socket.on('commande', function (action) {
+        console.log('message du client : ' + action);
+        arduinoSerialPort.write(action);
+        socket.emit('messageServer', action);
     });
 });
 
+// Remove the socket when it closes
+// io.sockets.on('close', function () {
+//     console.log('socket', socketId, 'closed');
+//     socket.emit('messageServer','Fermeture du server !');
+//     delete io.sockets[socketId];
+// });
+
+// Close the server
+// myserver.close(function () { console.log('Server closed!'); });
+// // Destroy all open sockets
+// for (var socketId in io.sockets) {
+//   console.log('socket', socketId, 'destroyed');
+//   io.sockets[socketId].destroy();
+// }
 
 /* *******************************************************************
                             SERIAL PORT
 ******************************************************************* */
 // LIBRAIRIE POUR COMMUNIQUER PORT SERIE (Node SerialPort)
 // https://serialport.io/
+// port com PC
 const arduinoCOMPort = "COM5";
-let infoSerailPort = "";
+// port com RASPBERRY
+// const arduinoCOMPort = "/dev/ttyACM0";
+let infoSerialPort = "";
 
 // INITIALISE LA COMMUNICATION 
 let arduinoSerialPort = new SerialPort(arduinoCOMPort, {
@@ -172,15 +117,24 @@ const parser = arduinoSerialPort.pipe(new Readline({
     delimiter: '\n',
 }));
 
+// OUVERTURE DU PORT SERIE  
+arduinoSerialPort.on('open', function () {
+    infoSerialPort = 'Le port serie ' + arduinoCOMPort + ' est ouvert.';
+    console.log(infoSerialPort);
+    io.sockets.emit('sendSerialPort', infoSerialPort);
+});
+
+// ERREUR D'OUVERTURE DU PORT SERIE  
+arduinoSerialPort.on('error', function () {
+    infoSerialPort = 'Erreur lors de l\'ouverture du port : ' + arduinoCOMPort + '.';
+    console.log(infoSerialPort);
+    io.sockets.emit('sendSerialPort', infoSerialPort);
+});
+
 // AFFICHE LES DONNEES RECU VIA LE PORT SERIE
 parser.on('data', data => {
     infoSerailPort = data;
     console.log('Arduino émission de données : ', data);
-    socket.emit('sendSerialPort : ', data);
+    io.sockets.emit('sendSerialPort', data);
 });
 
-// OUVERTURE DU PORT SERIE  
-arduinoSerialPort.on('open', function () {
-    infoSerailPort = 'Le port serie ' + arduinoCOMPort + ' est ouvert.';
-    console.log(infoSerailPort);
-});
