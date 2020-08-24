@@ -194,12 +194,6 @@ slider.addEventListener('change', event => {
 /* ***************************************************************************** */
 
 
-document.getElementById("execAction").addEventListener('click', event => {
-    const myAction = document.getElementById("myAction").value;
-    // Commande envoyé au serveur
-    socket.emit('commande', myAction);
-});
-
 // CHARGEMENT DE LA PAGE HTML ET DEMARRAGE DES ANIMATIONS(alternative à load)
 document.onreadystatechange = function () {
     if (document.readyState == "complete") {

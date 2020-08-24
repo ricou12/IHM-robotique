@@ -19,24 +19,18 @@
     <div class="container-fluid">
         <!-- Titre +console -->
         <div class="row">
-            <div class="col-12 d-flex flex-nowrap p-2 align-items-center">
-                <div class="text-center flex-grow-1">
-                    <h1 class="title">IHM - Télécommande</h1>
-                </div>
-                <div class="mr-1">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-outline-light" data-toggle="modal"
-                        data-target="#exampleModalCenter">
-                        Console
-                    </button>
-
+            <div class="col-12">
+                <!-- Button trigger modal -->
+                <div class="box-title d-flex justify-content-center pt-2">
+                    <h1 class="title text-center" data-toggle="modal" data-target="#exampleModalCenter">IHM -
+                        Télécommande</h1>
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content colorDark text-white">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Exécuter une action </h5>
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Exécution d'une action </h5>
                                     <button type="button" class="close text-white" data-dismiss="modal"
                                         aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -44,38 +38,6 @@
                                 </div>
                                 <div class="modal-body">
                                     <img src="/images/communication.png" alt="Communication" width="100%">
-                                    <p class="font-weight-bold text-primary">Liste de commandes</p>
-                                    <p><span class="font-weight-bold text-success">Caméra</span> : CamUp, CamDown,
-                                        CamLeft, CamCenter, CamRight, CamScanX, CamScanY.</p>
-                                    <p><span class="font-weight-bold text-success">Déplacement du véhicule</span> :
-                                        MotorsStop, MotorsForward, MotorsBackward, MotorsLeft,
-                                        MotorsFrontLeft, MotorsBackLeft, MotorsRight, MotorsFrontRight, MotorsBackRight
-                                    </p>
-                                    <label for="myAction">Séléctionner l'action suivante : </label>
-                                    <select name="action" id="myAction">
-                                        <option value="">--sélectionner une commande--</option>
-                                        <option value="CamUp">CamUp : regarder en haut</option>
-                                        <option value="CamDown">CamDown : regarder en bas</option>
-                                        <option value="CamLeft">CamLeft : regarder à gauche</option>
-                                        <option value="CamCenter">CamCenter : regarder en face</option>
-                                        <option value="CamRight">CamRight : regarder en droite</option>
-                                        <option value="CamScanX">CamScanX : regarder de droite à gauche</option>
-                                        <option value="CamScanY">CamScanY : regarder de haut en bas</option>
-                                        <option value="MotorsStop">MotorsStop : arrêter</option>
-                                        <option value="MotorsForward">MotorsForward : avancer</option>
-                                        <option value="MotorsBackward">MotorsBackward : reculer</option>
-                                        <option value="MotorsLeft">MotorsLeft : déplacer vers la gauche</option>
-                                        <option value="MotorsFrontLeft">MotorsFrontLeft : déplacer vers l'avant gauche
-                                        </option>
-                                        <option value="MotorsBackLeft">MotorsBackLeft : déplacer vers l'arrière gauche
-                                        </option>
-                                        <option value="MotorsRight">MotorsRight : déplacer vers la droite</option>
-                                        <option value="MotorsFrontRight">MotorsFrontRight : déplacer vers l'avant droite
-                                        </option>
-                                        <option value="MotorsBackRight">MotorsBackRight : reculer à droite</option>
-                                    </select>
-                                    <button type="button" class="btn btn-outline-primary mt-2 mt-sm-0"
-                                        id="execAction">Exécuter</button>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -143,10 +105,12 @@
                     <div class="moteurs-arDroite">
                         <img src="/images/basDroite.png" alt="" data-id="moteur_ArDroite" class="icon">
                     </div>
-                    <div class="moteurs-vitesse rounded border border-dark d-flex flex-column align-items-center justify-content-around">
-                        <!-- <div class="font-weight-bold">Vitesse</div> -->
+                    <div
+                        class="moteurs-vitesse rounded border border-dark d-flex flex-column align-items-center justify-content-around">
+                        <div class="font-weight-bold mb-2">Vitesse</div>
                         <div class="slider-wrapper p-2">
-                            <input type="range" class="slider-moteurs" min="105" max="255" step="10" value="175" list="tickmarks">
+                            <input type="range" class="slider-moteurs" min="105" max="255" step="10" value="175"
+                                list="tickmarks">
                             <datalist id="tickmarks">
                                 <option value="5" label="0%">
                                 <option value="15">
@@ -222,7 +186,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                
+
             </div>
         </div>
     </div>
