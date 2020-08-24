@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 // Chargement de la page
 app.get('/', function (req, res) {
     res.render('index.html.twig', {
-        title: "Surveillance vidéo"
+        title: "IHM-robotique"
     });
     console.log('Page chargée');
 });
