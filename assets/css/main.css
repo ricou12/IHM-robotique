@@ -7267,15 +7267,15 @@ a.text-dark:hover, a.text-dark:focus {
   border-radius: 10%;
   padding: 2px;
   background-color: #fcfca7;
-  -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0);
-  box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0); }
+  -webkit-box-shadow: 0px 10px 13px -7px #00ffbf;
+  box-shadow: 0px 10px 13px -7px #00ffbf; }
 
 .icon:hover {
   background-color: #fffc5c; }
 
 .icon:active {
-  -webkit-box-shadow: 0px 5px 7px -7px #ff8f00;
-  box-shadow: 0px 6px 8px -7px #ff8f00; }
+  -webkit-box-shadow: 0px 5px 7px -7px #00ffbf;
+  box-shadow: 0px 6px 8px -7px #00ffbf; }
 
 .container__moteurs {
   height: 200px; }
