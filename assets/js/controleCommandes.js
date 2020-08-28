@@ -123,7 +123,7 @@ const dataSerialPort = document.getElementById('dataSerialPort');
 /* *****************************
             SOCKET
 ***************************** */
-let socket = io.connect('//:3000');
+let socket = io.connect('//:4000');
 
 // messages renvoyés par le serveur.
 socket.on('messageServer', function (message) {
