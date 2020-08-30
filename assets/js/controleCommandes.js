@@ -126,7 +126,7 @@ const dataSerialPort = document.getElementById('dataSerialPort');
 let socket = io.connect('//:4000');
 
 // messages renvoyés par le serveur.
-socket.on('messageServer', function (message) {
+socket.on('messageFromServer', function (message) {
     dataServer.innerHTML += message + '<br>';
     dataServer.scrollTop = dataServer.scrollHeight;
 });

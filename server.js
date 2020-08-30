@@ -52,7 +52,7 @@ app.get('/:action', function (req, res) {
     message = '';
     let action = req.params.action || req.param('action');
     arduinoSerialPort.write(action);
-    io.sockets.emit('messageServer', action);
+    io.sockets.emit('messageFromServer', action);
 });
 
 const myserver = app.listen(port, function () {
@@ -67,24 +67,25 @@ const myserver = app.listen(port, function () {
 let io = require('socket.io')(myserver);
 
 io.sockets.on('connection', function (socket) {
-    // Quand un client se connecte, on le note dans la console
+    // QUAND UN CLIENT SE CONNECTE
+    // on le note dans la console
     console.log('Un client est connecté !');
 
-    // Quand un client se connecte, on envoie un message
-    socket.emit('messageServer', 'Vous êtes connecté au serveur !');
+    // On informe le client qu'il est connecté
+    socket.emit('messageFromServer', 'Vous êtes connecté au serveur !');
 
     // On écoute les requetes du client et on envoie la commande à l'arduino
     socket.on('commande', function (action) {
         console.log('message du client : ' + action);
-        arduinoSerialPort.write(action);
-        socket.emit('messageServer', action);
+        serialPortForArduino.write(action);
+        socket.emit('messageFromServer', action);
     });
 });
 
 // Remove the socket when it closes
 // io.sockets.on('close', function () {
 //     console.log('socket', socketId, 'closed');
-//     socket.emit('messageServer','Fermeture du server !');
+//     socket.emit('messageFromServer','Fermeture du server !');
 //     delete io.sockets[socketId];
 // });
 
@@ -101,40 +102,112 @@ io.sockets.on('connection', function (socket) {
 ******************************************************************* */
 // LIBRAIRIE POUR COMMUNIQUER PORT SERIE (Node SerialPort)
 // https://serialport.io/
-// port com PC
-const arduinoCOMPort = "COM5";
-// port com RASPBERRY
-// const arduinoCOMPort = "/dev/ttyACM0";
-let infoSerialPort = "";
+// PORT COM WINDOWS
+// let PortCOM = "COM5";
+// PORT COM RASPBERRY
+// const PortCOM = "/dev/ttyACM0";
 
-// INITIALISE LA COMMUNICATION 
-let arduinoSerialPort = new SerialPort(arduinoCOMPort, {
-    baudRate: 9600,
-});
+// let PortCOM =[];
+// let listSerialPort = [];
+let serialPortForArduino;
+let MessageOfSerialPort;
+let infoSerialPort=[];
+let IdForTempo = false;
 
-// PARAMETRAGE DES DONNEES RECUES VIA LE PORT SERIE (delimiter :Longueur de la chaine \n saut de ligne, \r retour chariot)  
-const parser = arduinoSerialPort.pipe(new Readline({
-    delimiter: '\n',
-}));
+// LISTE + INFOS DES PORTS SERIES, FONCTION ASYNCHRONE
+function listPorts() {
+    return SerialPort.list().then(
+        ports => {
+            if (ports.length > 0) {
+                console.log('Listes des ports :');
+                console.log(ports);
+                infoSerialPort = ports;
+                return {
+                    'state': true,
+                };
+            } else {
+                console.log('Aucun port série disponible ou non spécifié.');
+                MessageOfSerialPort = 'Aucun port série disponible ou non spécifié.';
+                detectSerialPort();
+                return {
+                    'state': false
+                };
+            }
+        },
+        err => {
+            console.error('Error listing ports', err);
+            return {
+                'state': false
+            };
+        }
+    )
+}
 
-// OUVERTURE DU PORT SERIE  
-arduinoSerialPort.on('open', function () {
-    infoSerialPort = 'Le port serie ' + arduinoCOMPort + ' est ouvert.';
-    console.log(infoSerialPort);
-    io.sockets.emit('sendSerialPort', infoSerialPort);
-});
+// INITISALISE LE PORT SERIE
+let ConnectSerialPort = (PortCOM) => {
+    // todo envoyer la liste des ports serie pour la connection
 
-// ERREUR D'OUVERTURE DU PORT SERIE  
-arduinoSerialPort.on('error', function () {
-    infoSerialPort = 'Erreur lors de l\'ouverture du port : ' + arduinoCOMPort + '.';
-    console.log(infoSerialPort);
-    io.sockets.emit('sendSerialPort', infoSerialPort);
-});
+    // INITIALISE LA COMMUNICATION 
+    // INITIALISE LA COMMUNICATION 
+    serialPortForArduino = new SerialPort(PortCOM, {
+        baudRate: 9600,
+    });
 
-// AFFICHE LES DONNEES RECU VIA LE PORT SERIE
-parser.on('data', data => {
-    infoSerailPort = data;
-    console.log('Arduino émission de données : ', data);
-    io.sockets.emit('sendSerialPort', data);
-});
+    // PARAMETRAGE DES DONNEES RECUES VIA LE PORT SERIE (delimiter :  \n saut de ligne, \r retour chariot, \t tabulation "   ")  
+    const parser = serialPortForArduino.pipe(new Readline({
+        delimiter: '\n',
+    }));
 
+    // OUVERTURE DU PORT SERIE  
+    serialPortForArduino.on('open', function () {
+        MessageOfSerialPort = 'Le port serie ' + PortCOM + ' est ouvert.';
+        console.log(MessageOfSerialPort);
+        io.sockets.emit('messageFromServer', MessageOfSerialPort);
+    });
+
+    // ERREUR D'OUVERTURE DU PORT SERIE  
+    serialPortForArduino.on('error', function () {
+        MessageOfSerialPort = 'Erreur lors de l\'ouverture du port : ' + PortCOM + '.';
+        console.error('Erreur lors de l\'ouverture du port : ' + PortCOM + '.');
+        io.sockets.emit('messageFromServer', MessageOfSerialPort);
+    });
+
+    // FERMETURE DU PORT SERIE  
+    serialPortForArduino.on('close', error => {
+        MessageOfSerialPort = 'Le port serie ' + PortCOM + ' à été fermé.';
+        console.log(MessageOfSerialPort);
+        io.sockets.emit('messageFromServer', MessageOfSerialPort);
+        // surveille la reconnection du port série
+        detectSerialPort();
+    });
+
+    // AFFICHE LES DONNEES RECU VIA LE PORT SERIE
+    parser.on('data', data => {
+        infoSerailPort = data;
+        console.log("Arduino émission de données :  " + data);
+        io.sockets.emit('messageFromServer', "Arduino émission de données :  " + data);
+    });
+}
+
+// FONCTION ASYNCHRONE ATTENDS LA LISTE PUIS SE CONNECTE AU PORT SERIE SI IL EXISTE.
+async function asyncCall() {
+    // Stop la detection des ports series
+    clearInterval(IdForTempo);
+
+    // Attends la liste des ports séries
+    const updateListPorts = await listPorts();
+    // Si des ports existent se connectent par défaut sur le première élément.
+    if (updateListPorts.state) {
+        ConnectSerialPort(infoSerialPort[0].path);
+    }
+}
+
+// surveille la reconnection du port série
+const detectSerialPort = () => {
+    IdForTempo = setInterval(function () {
+        asyncCall();
+    }, 2000);
+}
+
+// FONCTION EXECUTE AU CHARGEMENT DU SCRIPT
+asyncCall();
