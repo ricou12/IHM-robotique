@@ -38,11 +38,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <img src="/images/communication.png" alt="Communication" width="100%">
-                                    <p>
-                                      <span class="font-weight-bold">Actions</span> <br>
-                                        Déplacement (action + vitesse) : MotorsFrontLeft, MotorsForward,MotorsFrontRight, MotorsLeft, MotorsStop, MotorsRight, MotorsBackLeft, MotorsBackward, MotorsBackRight <br>
-                                        Caméra : CamUp CamLeft, CamCenter, CamRight, CamDown, CamScanX, CamScanY <br>
-                                        Vitesse : de 0 à 255 <br><br>
+                                     <p>
                                         Commande : action + ";" + optionnel(vitesse) <br>
                                     </p>
                                     <label for="infoAction">Console : </label>
@@ -63,26 +59,19 @@
         <div class="row no-gutters" id="myConsole">
             <!-- Terminal -->
             <div class="col-12 order-1 col-xl-6 order-xl-2 d-flex flex-column pr-1 pr-md-0">
-                <div class="infoConsole infoConsole__haut--height">
-                    <div class="infoConsole__titre infoConsole__titre__server--bRadius">
-                        Server
-                    </div>
-                    <div class="terminal terminal-server" id="dataServer"></div>
-
-                </div>
                 <div class="commande-camera">
                     <iframe id="rpiCam" src="http://10.3.141.1/RpiCam/min.php"></iframe>
                 </div>
                 <div class="infoConsole infoConsole__bas--height">
-                    <div class="infoConsole__titre infoConsole__titre__serialPort--bRadius">
+                    <div class="infoConsole__titre infoConsole__titre__server--bRadius">
                         Port série
                     </div>
-                    <div class="terminal terminal-serialPort" id="dataSerialPort"></div>
+                    <div class="terminal terminal--server" id="dataFromServer"></div>
                 </div>
             </div>
 
             <!-- Commandes moteurs -->
-            <div class="col-6 order-2 col-xl-3 order-xl-1 d-flex flex-column align-items-center mt-2 cacher"
+            <div class="col-6 order-2 col-xl-3 order-xl-1 d-flex flex-column align-items-center mt-2 hidden"
                 id="container__boxMoteur">
                 <div class="boxTitleHaut">
                     <h5 class="sousTitre text-center">Commandes moteurs</h5>
@@ -129,7 +118,7 @@
             </div>
 
             <!-- Commandes caméra -->
-            <div class="col-6 order-3 col-xl-3 order-xl-3 d-flex flex-column align-items-center mt-2 cacher"
+            <div class="col-6 order-3 col-xl-3 order-xl-3 d-flex flex-column align-items-center mt-2 hidden"
                 id="container__boxCamera">
                 <div class="boxTitleHaut">
                     <h5 class="sousTitre text-center">Caméra</h5>

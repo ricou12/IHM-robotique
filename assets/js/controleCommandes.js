@@ -117,8 +117,8 @@ let last_action = "";
 // Dossier contenant les images des boutons de commandes
 const path = "/images/";
 const icons = document.querySelectorAll('.icon');
-const dataServer = document.getElementById('dataServer');
-const dataSerialPort = document.getElementById('dataSerialPort');
+const dataFromServer = document.getElementById('dataFromServer');
+// const dataSerialPort = document.getElementById('dataSerialPort');
 
 /* *****************************
             SOCKET
@@ -126,15 +126,15 @@ const dataSerialPort = document.getElementById('dataSerialPort');
 let socket = io.connect('//:4000');
 
 // messages renvoyés par le serveur.
-socket.on('messageFromServer', function (message) {
-    dataServer.innerHTML += message + '<br>';
-    dataServer.scrollTop = dataServer.scrollHeight;
-});
+// socket.on('messageFromServer', function (message) {
+//     dataFromServer.innerHTML += message + '<br>';
+//     dataServer.scrollTop = dataServer.scrollHeight;
+// });
 
 // message envoyé par l'arduino au server node via le port serie.
-socket.on('sendSerialPort', function (message) {
-    dataSerialPort.innerHTML += message + '<br>';
-    dataSerialPort.scrollTop = dataSerialPort.scrollHeight;
+socket.on('messageFromServer', function (message) {
+    dataFromServer.innerHTML += message + '<br>';
+    dataFromServer.scrollTop = dataFromServer.scrollHeight;
 });
 
 /* ************************************************************************************
@@ -205,13 +205,13 @@ document.onreadystatechange = function () {
         $("#myConsole").addClass('started');
         $("#rpiCam").addClass('started');
         setTimeout(function () {
-            $("#container__boxMoteur").removeClass("cacher");
+            $("#container__boxMoteur").removeClass("hidden");
             $("#container__boxMoteur").addClass('derouler');
             setTimeout(function () {
-                $("#container__boxCamera").removeClass("cacher");
+                $("#container__boxCamera").removeClass("hidden");
                 $("#container__boxCamera").addClass('derouler');
                 setTimeout(function () {
-                    $("#container__boxScanCam").removeClass("cacher");
+                    $("#container__boxScanCam").removeClass("hidden");
                     $("#container__boxScanCam").addClass('derouler');
                 }, 500);
             }, 500);

@@ -1,4 +1,4 @@
-.cacher {
+.hidden {
     visibility: hidden;
 }
 
@@ -28,6 +28,13 @@
     border: 1px solid #9a9a9a;
     border-radius: 0 0 5px 5px;
     background-color: rgba(30, 34, 49,0.7);
+}
+
+.modal{
+    font-size: 0.8em;
+}
+.modal h5 {
+    font-size: 1em;
 }
 
 .title {
@@ -80,9 +87,11 @@
 }
 
 .commande-camera {
-    border-width: 0 1px 0 1px;
+    background-color: black;
+    border-width: 1px 1px 0 1px;
     border-style: solid;
     border-color: #9a9a9a;
+    border-radius: 7px 7px 0 0;
 
     &__controle:hover{
         opacity:1;
@@ -91,6 +100,8 @@
 
 #rpiCam {
     background-color: black;
+    border: none;
+    border-radius: 7px;
     width: 100%;
     min-height: 300px;
     height: 30vw;
@@ -102,10 +113,6 @@
     flex-wrap: nowrap;
     font-size: 0.7em;
     color: #9a9a9a;
-
-    &__haut--height {
-        height: 40px;
-    }
 
     &__bas--height {
         height: 100px;
@@ -123,10 +130,6 @@
         min-width: 100px;
 
         &__server--bRadius {
-            border-radius: 5px 0 0 0;
-        }
-
-        &__serialPort--bRadius {
             border-radius: 0 0 0 5px;
         }
     }
@@ -144,11 +147,6 @@
         font-weight: 500;
 
         &-server {
-            border-radius: 0 5px 0 0;
-            height: 100%;
-        }
-
-        &-serialPort {
             border-radius: 0 0 5px 0;
             height: 100%;
         }
@@ -157,13 +155,14 @@
 
 @media screen and (max-width:755px) {
     .infoConsole {
-        &__haut--height {
-            height: 20px;
-        }
-
         &__bas--height {
-            height: 45px;
+            height: 70px;
         }
+    }
+    .title {
+        cursor: pointer;
+        font-size: 0.7em;
+        padding: 5px;
     }
 }
 
