@@ -1,3 +1,5 @@
 # IHM-robotique
 
-### Sockets, nodeJS Javascript
+### Interface de télécommande.
+
+Pour le pilotage d'un projet réalisé avec raspberry Pi et arduino.
